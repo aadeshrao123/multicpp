@@ -42,6 +42,15 @@ protected:
 		const FHitResult& SweepResult
 	);
 
+	UFUNCTION()
+	void OnSphereEndOverlap
+	(
+	UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex
+	);
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Property")
 	USkeletalMeshComponent* WeaponMesh; //Creating Skeletal Mesh For Weapon
@@ -54,8 +63,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Property")
 	class UWidgetComponent* PickupWidget;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void ShowPickupWidget(bool bShowWidget);
 };

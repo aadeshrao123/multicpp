@@ -6,6 +6,10 @@
 #include "Camera/CameraComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "multicpp/Weapon/Weapon.h"
+#include "Net/UnrealNetwork.h"
+
+
 // Sets default values
 ABlasterCharacter::ABlasterCharacter()
 {
@@ -35,6 +39,12 @@ void ABlasterCharacter::BeginPlay()
 	
 }
 
+// Called every frame
+void ABlasterCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
 // Called to bind functionality to input
 void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -46,6 +56,15 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ABlasterCharacter::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ABlasterCharacter::Turn);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &ABlasterCharacter::LookUp);
+}
+
+void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME(ABlasterCharacter, OverlappingWeapon); //It will replicate The variable to all clients
+	DOREPLIFETIME_CONDITION(ABlasterCharacter, OverlappingWeapon,COND_OwnerOnly); // In this the variable is only replicated to the owner of the client that owns the character
+	
 }
 
 
@@ -76,11 +95,35 @@ void ABlasterCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
-// Called every frame
-void ABlasterCharacter::Tick(float DeltaTime)
+void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 {
-	Super::Tick(DeltaTime);
+	if(OverlappingWeapon)
+	{
+		OverlappingWeapon->ShowPickupWidget(false);// For Hiding Widget on Server
 
+	}
+	OverlappingWeapon = Weapon;
+	if (IsLocallyControlled())
+	{
+		if (OverlappingWeapon)
+		{
+			OverlappingWeapon->ShowPickupWidget(true);// For Showing Widget On Server
+		}
+	}
 }
+
+void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
+{
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->ShowPickupWidget(true);
+	}
+	if (LastWeapon)
+	{
+		LastWeapon->ShowPickupWidget(false);
+	}
+}
+
+
 
 

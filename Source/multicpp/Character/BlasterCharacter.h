@@ -20,6 +20,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override; //Function for replicating the variable
+	
 protected:
 
 	// Called when the game starts or when spawned
@@ -40,7 +42,17 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* OverHeadWidget;
-public:	
+
+	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon) // We need to give that On rep Notify Function to the variable we want to be replicated
+	class AWeapon* OverlappingWeapon;
+
+	//Creating a Rep Notify function
+	UFUNCTION() //It needs to be a UFUNCTION()
+	void OnRep_OverlappingWeapon(AWeapon* LastWeapon); // Rep Notify only gets called on Client only not on server
+	
+public:
+	void SetOverlappingWeapon(AWeapon* Weapon);
+
 	
 
 };
