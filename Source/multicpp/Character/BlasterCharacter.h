@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "BlasterCharacter.generated.h"
 
@@ -25,12 +26,27 @@ public:
 protected:
 
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	void MoveForward(float Value);
-	void MoveRight(float Value);
-	void Turn(float Value);
-	void LookUp(float Value);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputMappingContext* BlasterMappingContext;
+
+	/** Jump Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* JumpAction;
+
+	/** Move Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* MoveAction;
+
+	/** Look Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* LookAction;
+
+	
+	virtual void BeginPlay() override;
+	
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
 
 private:
 
@@ -49,6 +65,9 @@ private:
 	//Creating a Rep Notify function
 	UFUNCTION() //It needs to be a UFUNCTION()
 	void OnRep_OverlappingWeapon(AWeapon* LastWeapon); // Rep Notify only gets called on Client only not on server
+
+	UPROPERTY(VisibleAnywhere)
+	class UCombatComponent* Combat;
 	
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
