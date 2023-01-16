@@ -27,6 +27,9 @@ public:
 	// Sets default values for this actor's properties
 	AWeapon();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override; //Function for replicating the variable
+
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -58,17 +61,22 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Property")
 	class USphereComponent* AreaSphere; // Sphere for collision for picking  up the weapon
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(ReplicatedUsing= OnRep_WeaponState, VisibleAnywhere, Category = "Weapon Property")
 	EWeaponState WeaponState;
+
+	UFUNCTION()
+	void OnRep_WeaponState();
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Property")
 	class UWidgetComponent* PickupWidget;
-	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void ShowPickupWidget(bool bShowWidget);
 
-	FORCEINLINE void SetWeaponState(EWeaponState State) {WeaponState = State;}
+	void SetWeaponState(EWeaponState State);
+
+	FORCEINLINE USphereComponent* GetAreaSphere() const {return AreaSphere;}
 };

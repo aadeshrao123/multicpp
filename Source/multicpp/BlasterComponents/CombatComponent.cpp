@@ -3,6 +3,7 @@
 
 #include "CombatComponent.h"
 
+#include "Components/SphereComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "multicpp/Character/BlasterCharacter.h"
 #include "multicpp/Weapon/Weapon.h"
@@ -46,6 +47,5 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 		HandSocket->AttachActor(EquippedWeapon, BlasteraCharacter->GetMesh());
 	}
 	EquippedWeapon->SetOwner(BlasteraCharacter); // Setting the owner as Blaster character after picking up the weapon
-	EquippedWeapon->ShowPickupWidget(false);
 }
 

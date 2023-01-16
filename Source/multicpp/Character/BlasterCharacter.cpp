@@ -128,11 +128,27 @@ void ABlasterCharacter::Look(const FInputActionValue& Value)
 
 void ABlasterCharacter::EquipButtonPressed()
 {
-	if (Combat && HasAuthority())
+	if (Combat)
+	{
+		if (HasAuthority())
+		{
+			Combat->EquipWeapon(OverlappingWeapon);
+		}
+		else
+		{
+			ServerEquippedbuttonPressed();
+		}
+	}
+}
+
+void ABlasterCharacter::ServerEquippedbuttonPressed_Implementation()
+{
+	if (Combat)
 	{
 		Combat->EquipWeapon(OverlappingWeapon);
 	}
 }
+
 
 void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
