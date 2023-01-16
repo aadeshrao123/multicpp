@@ -3,6 +3,10 @@
 
 #include "CombatComponent.h"
 
+#include "Engine/SkeletalMeshSocket.h"
+#include "multicpp/Character/BlasterCharacter.h"
+#include "multicpp/Weapon/Weapon.h"
+
 // Sets default values for this component's properties
 UCombatComponent::UCombatComponent()
 {
@@ -30,5 +34,18 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
+{
+	if (BlasteraCharacter == nullptr || WeaponToEquip == nullptr) return;
+	EquippedWeapon = WeaponToEquip;
+	EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+	if (const USkeletalMeshSocket* HandSocket = BlasteraCharacter->GetMesh()->GetSocketByName(FName("WeaponSocket"))) //for checking if hand socket is null or not if not then proceed
+	{
+		HandSocket->AttachActor(EquippedWeapon, BlasteraCharacter->GetMesh());
+	}
+	EquippedWeapon->SetOwner(BlasteraCharacter); // Setting the owner as Blaster character after picking up the weapon
+	EquippedWeapon->ShowPickupWidget(false);
 }
 
