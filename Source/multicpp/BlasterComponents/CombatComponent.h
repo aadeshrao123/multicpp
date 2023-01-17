@@ -19,7 +19,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override; //Function for replicating the variable
+	
 	void EquipWeapon(class AWeapon* WeaponToEquip);
+
+	
 
 protected:
 	// Called when the game starts
@@ -27,6 +31,8 @@ protected:
 
 private:
 	class ABlasterCharacter* BlasteraCharacter;
+
+	UPROPERTY(Replicated)
 	class AWeapon* EquippedWeapon;
 
 public:	
