@@ -46,6 +46,10 @@ private:
 	/** Equip Input Action */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
     class UInputAction* EquipAction;
+
+	/*Crouch Input Action*/
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* CrouchAction;
 protected:
 	
 	virtual void BeginPlay() override;
@@ -53,6 +57,7 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void EquipButtonPressed();
+	void CrouchButtonPressed();
 
 private:
 
