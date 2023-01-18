@@ -50,6 +50,10 @@ private:
 	/*Crouch Input Action*/
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* CrouchAction;
+
+	/*Aim Input Action*/
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* AimAction;
 protected:
 	
 	virtual void BeginPlay() override;
@@ -58,6 +62,9 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void EquipButtonPressed();
 	void CrouchButtonPressed();
+	void CrouchButtonReleased();
+	void AimButtonPressed();
+	void AimButtonReleased();
 
 private:
 
@@ -86,6 +93,7 @@ private:
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	bool IsWeaponEquipped();
+	bool IsAiming();
 
 	
 
