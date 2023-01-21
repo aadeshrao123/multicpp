@@ -5,6 +5,7 @@
 
 #include "Components/SphereComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "multicpp/Character/BlasterCharacter.h"
 #include "multicpp/Weapon/Weapon.h"
 #include "Net/UnrealNetwork.h"
@@ -33,6 +34,15 @@ void UCombatComponent::SetAiming(bool bIsAiming)
 {
 	bAiming = bIsAiming; // It is not important but I am writing this so the client whi is pressing aim button doesn't need to wait for the information to reach server it will directly show on clients machine and next line will send the information to server also 
 	ServerSetAiming(bIsAiming);// For send ing aim button pressed info to server
+}
+
+void UCombatComponent::OnRep_EquippedWeapon() // For Replicating Strafing on client itseflf
+{
+	if (EquippedWeapon && BlasteraCharacter)
+	{
+		BlasteraCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+		BlasteraCharacter->bUseControllerRotationYaw = true;
+	}
 }
 
 void UCombatComponent::ServerSetAiming_Implementation(bool bIsAiming)
@@ -66,5 +76,8 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 		HandSocket->AttachActor(EquippedWeapon, BlasteraCharacter->GetMesh());
 	}
 	EquippedWeapon->SetOwner(BlasteraCharacter); // Setting the owner as Blaster character after picking up the weapon
+
+	BlasteraCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+	BlasteraCharacter->bUseControllerRotationYaw = true;
 }
 
