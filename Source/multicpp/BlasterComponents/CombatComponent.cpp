@@ -16,7 +16,8 @@ UCombatComponent::UCombatComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
+	BaseWalkSpeed = 600.f;
+	AimWalkSpeed = 450.f;
 	// ...
 }
 
@@ -25,7 +26,7 @@ UCombatComponent::UCombatComponent()
 void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// ...
 	
 }
@@ -34,6 +35,36 @@ void UCombatComponent::SetAiming(bool bIsAiming)
 {
 	bAiming = bIsAiming; // It is not important but I am writing this so the client whi is pressing aim button doesn't need to wait for the information to reach server it will directly show on clients machine and next line will send the information to server also 
 	ServerSetAiming(bIsAiming);// For send ing aim button pressed info to server
+
+	if (BlasteraCharacter)
+	{
+		if (bIsAiming)
+		{
+			BlasteraCharacter->GetCharacterMovement()->MaxWalkSpeed = AimWalkSpeed;
+		}
+		else
+		{
+			BlasteraCharacter->GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+		}
+		
+	}
+}
+
+void UCombatComponent::ServerSetAiming_Implementation(bool bIsAiming)
+{
+	bAiming = bIsAiming;
+	if (BlasteraCharacter)
+	{
+		if (bIsAiming)
+		{
+			BlasteraCharacter->GetCharacterMovement()->MaxWalkSpeed = AimWalkSpeed;
+		}
+		else
+		{
+			BlasteraCharacter->GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+		}
+		
+	}
 }
 
 void UCombatComponent::OnRep_EquippedWeapon() // For Replicating Strafing on client itseflf
@@ -45,10 +76,7 @@ void UCombatComponent::OnRep_EquippedWeapon() // For Replicating Strafing on cli
 	}
 }
 
-void UCombatComponent::ServerSetAiming_Implementation(bool bIsAiming)
-{
-	bAiming = bIsAiming;
-}
+
 
 
 // Called every frame
