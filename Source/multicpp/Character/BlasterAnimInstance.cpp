@@ -51,14 +51,8 @@ void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	const float Interp = FMath::FInterpTo(Lean, Target, DeltaSeconds, 6.F);
 	Lean = FMath::Clamp(Interp, -90.f, 90.f);
 
-	/*if (!BlasterCharacter->HasAuthority() && !BlasterCharacter->IsLocallyControlled())
-	{
-		/*
-		UE_LOG(LogTemp, Warning, TEXT("AimRotation Yaw %f: "), AimRotation.Yaw);
-		UE_LOG(LogTemp, Warning, TEXT("MovementRotaion Yaw %f: "), MovementRotaion.Yaw);
-		#1#
-		
-		
-	}*/
+	AO_Yaw = BlasterCharacter->GetAO_Yaw();
+	AO_Pitch = BlasterCharacter->GetAO_Pitch();
+
 	
 }
